@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import enums.AppSection;
 import services.ApiCallsService;
 import screens.ApiCallsScreen;
-import tests.BaseTest;
 
 public class ApiCallsTest extends BaseTest {
 
