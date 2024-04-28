@@ -35,7 +35,7 @@ dependencies {
 }
 
 tasks.register<Copy>("getDeps") {
-    from(sourceSets["test"].runtimeClasspath)
+    from(configurations["testRuntimeClasspath"].filter { it.name.endsWith(".jar") })
     into("build/libs/dependency-jars")
 }
 

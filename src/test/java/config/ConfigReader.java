@@ -6,4 +6,5 @@ public class ConfigReader {
     public static final AppConfig appConfig = ConfigFactory.create(AppConfig.class);
     public static final RunConfig runConfig = ConfigFactory.create(RunConfig.class);
     public static final EmulatorConfig emulatorConfig = ConfigFactory.create(EmulatorConfig.class);
+    public static final AwsDeviceFarmConfig awsDeviceFarmConfig = ConfigFactory.create(AwsDeviceFarmConfig.class, System.getProperties(), System.getenv());
 }

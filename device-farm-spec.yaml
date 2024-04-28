@@ -1,0 +1,61 @@
+version: 0.1
+
+android_test_host: amazon_linux_2
+phases:
+
+  install:
+    commands:
+      - devicefarm-cli use node 18
+      - node --version
+
+      - devicefarm-cli use appium 2
+      - appium --version
+
+      - export APPIUM_BASE_PATH=/wd/hub
+
+      - devicefarm-cli use java 17
+      - java -version
+
+  pre_test:
+    commands:
+      - export CLASSPATH=$CLASSPATH:$DEVICEFARM_TEST_PACKAGE_PATH/*
+      - export CLASSPATH=$CLASSPATH:$DEVICEFARM_TEST_PACKAGE_PATH/dependency-jars/*
+
+      - |-
+        appium --base-path=$APPIUM_BASE_PATH --log-timestamp \
+          --log-no-colors --relaxed-security --default-capabilities \
+          "{\"appium:deviceName\": \"$DEVICEFARM_DEVICE_NAME\", \
+          \"platformName\": \"$DEVICEFARM_DEVICE_PLATFORM_NAME\", \
+          \"appium:app\": \"$DEVICEFARM_APP_PATH\", \
+          \"appium:udid\":\"$DEVICEFARM_DEVICE_UDID\", \
+          \"appium:platformVersion\": \"$DEVICEFARM_DEVICE_OS_VERSION\", \
+          \"appium:automationName\": \"UiAutomator2\"}" \
+          >> $DEVICEFARM_LOG_DIR/appium.log 2>&1 &
+
+      - |-
+        appium_initialization_time=0;
+        until curl --silent --fail "http://0.0.0.0:4723${APPIUM_BASE_PATH}/status"; do
+          if [[ $appium_initialization_time -gt 30 ]]; then
+            echo "Appium did not start within 30 seconds. Exiting...";
+            exit 1;
+          fi;
+          appium_initialization_time=$((appium_initialization_time + 1));
+          echo "Waiting for Appium to start on port 4723...";
+          sleep 1;
+        done;
+
+  test:
+    commands:
+      - cd $DEVICEFARM_TEST_PACKAGE_PATH
+      - echo "Starting the Appium Java JUnit 5 tests"
+
+      - export TEST_JAR=$(find $DEVICEFARM_TEST_PACKAGE_PATH -maxdepth 1 -name *-tests.jar)
+      - |-
+        java org.junit.platform.console.ConsoleLauncher --class-path=$TEST_JAR --scan-classpath \
+          --fail-if-no-tests --disable-ansi-colors --reports-dir $DEVICEFARM_LOG_DIR/test-output
+
+  post_test:
+    commands:
+
+artifacts:
+  - $DEVICEFARM_LOG_DIR

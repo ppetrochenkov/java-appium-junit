@@ -5,6 +5,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import javax.annotation.Nonnull;
 
+import config.ConfigReader;
 import io.appium.java_client.android.AndroidDriver;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,8 +18,8 @@ public class AwsDeviceFarmDriver implements AndroidDriverProvider {
         DesiredCapabilities options = new DesiredCapabilities();
         options.merge(capabilities);
 
-        log.info(String.format("Starting new AWS device farm driver for %s device",
-                options.getCapability("appium:deviceName")));
+        log.info(String.format("Starting new Android driver for %s device",
+                ConfigReader.awsDeviceFarmConfig.deviceFarmDeviceName()));
 
         return new AndroidDriver(this.getAppiumUrl(), options);
     }
