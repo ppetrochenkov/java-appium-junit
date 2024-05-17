@@ -19,7 +19,17 @@ pipeline {
                         appiumJavaJUnitTest: './build/libs/android_appium_mydemo.zip',
                         ifVideoRecording: false,
                         ifAppPerformanceMonitoring: false,
-                        jobTimeoutMinutes: 10
+                        jobTimeoutMinutes: 10,
+                        environmentToRun: 'ANDROID',
+                        testToRun: 'APPIUM_JAVA_JUNIT',
+                        storeResults: true,
+                        resultsPath: './devicefarm-results',
+                        archiveResults: true,
+                        isRunUnmetered: false,
+                        eventCount: 1000,
+                        eventThrottle: 50,
+                        seed: 12345,
+                        username: 'ppetrachenkau_iam'
             }
         }
     }
