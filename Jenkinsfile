@@ -26,9 +26,9 @@ pipeline {
                         resultsPath: './devicefarm-results',
                         archiveResults: true,
                         isRunUnmetered: false,
-                        eventCount: 1000,
-                        eventThrottle: 50,
-                        seed: 12345,
+//                         eventCount: 1000,
+//                         eventThrottle: 50,
+//                         seed: 12345,
                         username: 'ppetrachenkau_iam'
             }
         }
