@@ -3,7 +3,9 @@ pipeline {
 
     stages {
         stage('Build tests zip with dependencies') {
-            sh 'gradlew clean zip'
+            steps {
+                sh 'gradlew clean zip'
+            }
         }
     }
 }
